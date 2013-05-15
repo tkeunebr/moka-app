@@ -13,7 +13,11 @@ import android.view.View;
 import android.widget.TextView;
 import fr.utc.nf28.moka.DeviceConfigurationActivity;
 import fr.utc.nf28.moka.MainActivity;
+<<<<<<< HEAD
 import fr.utc.nf28.moka.MokaApplication;
+=======
+import fr.utc.nf28.moka.ManualConfigurationActivity;
+>>>>>>> origin/master
 import fr.utc.nf28.moka.R;
 import fr.utc.nf28.moka.util.NfcUtils;
 
@@ -36,6 +40,13 @@ public class NfcActivity extends Activity {
 			public void onClick(View view) {
 				startActivity(new Intent(NfcActivity.this, MainActivity.class));
 				finish();
+			}
+		});
+
+		findViewById(R.id.manuel).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				startActivity(new Intent(NfcActivity.this,ManualConfigurationActivity.class));
 			}
 		});
 
