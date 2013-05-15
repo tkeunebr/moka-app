@@ -8,13 +8,9 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17"/>
 
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-=======
-    <uses-permission android:name="android.permission.NFC"/>
->>>>>>> origin/master
 
     <application
         android:name="fr.utc.nf28.moka.MokaApplication"
