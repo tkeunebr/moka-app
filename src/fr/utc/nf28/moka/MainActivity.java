@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import fr.utc.nf28.moka.agent.IAndroidAgent;
 import fr.utc.nf28.moka.data.MokaItem;
 import fr.utc.nf28.moka.data.MokaType;
 import fr.utc.nf28.moka.ui.CurrentItemListFragment;
@@ -100,6 +102,13 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 	@Override
 	public void onTypeSelected(MokaType type) {
+		IAndroidAgent agent = ((MokaApplication) getApplication()).getAndroidAgentInterface();
+		if(agent != null){
+			Log.i("vbarthel", "ping ask");
+			agent.ping();
+		}else{
+			Log.i("vbarthel", "ping canceld, null pointer");
+		}
 		final Intent detailIntent = new Intent(this, NewItemActivity.class);
 		detailIntent.putExtra(NewItemActivity.ARG_TYPE, type);
 		startActivityForResult(detailIntent, CREATE_ITEM_REQUEST);

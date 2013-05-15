@@ -22,10 +22,11 @@ import jade.util.leap.Properties;
 import jade.wrapper.ControllerException;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class MokaApplication extends Application {
 	public static HashMap<String, MokaType> MOKA_TYPES;
-	private static final String ANDROID_AGENT_NICKNAME = "AndroidAgent";
+	private static final String ANDROID_AGENT_NICKNAME = "AndroidAgent_"+ UUID.randomUUID().toString();
 
 	private MicroRuntimeServiceBinder mMicroRuntimeServiceBinder;
 	private Properties mAgentContainerProperties;
@@ -50,11 +51,13 @@ public class MokaApplication extends Application {
 		mAgentContainerProperties.setProperty(Profile.JVM, Profile.ANDROID);
 	}
 
-	public void startJadePlatform(String host) {
+
+	public void startJadePlatform(final String host) {
 		startJadePlatform(host, Profile.DEFAULT_PORT);
 	}
 
-	public void startJadePlatform(String host, int port) {
+	public void startJadePlatform(final String host, final int port) {
+		Log.i("vbarthel", "start jade platform");
 		mAgentContainerProperties.setProperty(Profile.MAIN_HOST, host);
 		mAgentContainerProperties.setProperty(Profile.MAIN_PORT, String.valueOf(port));
 		bindMicroRuntimeService();
@@ -65,19 +68,23 @@ public class MokaApplication extends Application {
 			return MicroRuntime.getAgent(ANDROID_AGENT_NICKNAME).getO2AInterface(IAndroidAgent.class);
 		} catch (ControllerException e) {
 			e.printStackTrace();
+			Log.i("vbarthel", "getAndroidAgentInterface failed");
 			return null;
 		}
 	}
 
 	private void bindMicroRuntimeService() {
+		Log.i("vbarthel", "bind micro runtime");
 		ServiceConnection serviceConnection = new ServiceConnection() {
 			public void onServiceConnected(ComponentName className, IBinder service) {
 				// Bind successful
+				Log.i("vbarthel", "bind micro runtime success");
 				mMicroRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
 				startAgentContainer();
 			};
 			public void onServiceDisconnected(ComponentName className) {
 				// Bind unsuccessful
+				Log.i("vbarthel", "bind micro runtime fail");
 				mMicroRuntimeServiceBinder = null;
 			}
 		};
@@ -90,32 +97,37 @@ public class MokaApplication extends Application {
 
 
 	private void startAgentContainer() {
+		Log.i("vbarthel", "start agent container");
 		mMicroRuntimeServiceBinder.startAgentContainer(mAgentContainerProperties,
 				new RuntimeCallback<Void>() {
 					@Override
 					public void onSuccess(Void thisIsNull) {
+						Log.i("vbarthel", "start agent container success");
 						// Split container successfully started
 						startAgent(ANDROID_AGENT_NICKNAME, AndroidAgent.class.getName(), null);
 					}
 					@Override
 					public void onFailure(Throwable throwable) {
+						Log.i("vbarthel", "start agent container fail");
 						// Split container startup error
 					}
 				} );
 	}
 
-	private void startAgent(String nickName, String className, Object[] params) {
+	private void startAgent(final String nickName, final String className, Object[] params) {
+		Log.i("vbarthel", "start agent " + nickName);
 		mMicroRuntimeServiceBinder.startAgent(nickName, className, params,
 				new RuntimeCallback<Void>() {
 					@Override
 					public void onSuccess(Void aVoid) {
 						//Agent successfully started
-						getAndroidAgentInterface().ping();
+						Log.i("vbarthel", "start agent " + nickName + " success");
 					}
 
 					@Override
 					public void onFailure(Throwable throwable) {
 						//Agent startup error
+						Log.e("vbarthel", "start agent " + nickName + " fail", throwable);
 					}
 				} );
 	}
