@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import fr.utc.nf28.moka.agent.AndroidAgent;
 import fr.utc.nf28.moka.data.ComputerType;
 import fr.utc.nf28.moka.data.MediaType;
 import fr.utc.nf28.moka.data.MokaType;
@@ -80,7 +81,7 @@ public class MokaApplication extends Application {
 					@Override
 					public void onSuccess(Void thisIsNull) {
 						// Split container successfully started
-						// Start an agent here !
+						startAgent("dummyAgent", AndroidAgent.class.getName(), null);
 					}
 					@Override
 					public void onFailure(Throwable throwable) {
