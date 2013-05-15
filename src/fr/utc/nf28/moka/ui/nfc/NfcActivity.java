@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import fr.utc.nf28.moka.DeviceConfigurationActivity;
 import fr.utc.nf28.moka.MainActivity;
+import fr.utc.nf28.moka.MokaApplication;
 import fr.utc.nf28.moka.R;
 import fr.utc.nf28.moka.util.NfcUtils;
 
@@ -42,6 +43,8 @@ public class NfcActivity extends Activity {
 		if(mNfcAdapter == null){
 			((TextView)findViewById(R.id.info)).setText(R.string.info_no_nfc_text);
 		}
+
+		((MokaApplication)getApplication()).startJadePlatform("192.168.1.80");
 	}
 
 

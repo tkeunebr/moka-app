@@ -1,15 +1,28 @@
 package fr.utc.nf28.moka;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import fr.utc.nf28.moka.data.ComputerType;
 import fr.utc.nf28.moka.data.MediaType;
 import fr.utc.nf28.moka.data.MokaType;
 import fr.utc.nf28.moka.data.TextType;
+import jade.android.MicroRuntimeService;
+import jade.android.MicroRuntimeServiceBinder;
+import jade.android.RuntimeCallback;
+import jade.core.Profile;
+import jade.util.leap.Properties;
 
 import java.util.HashMap;
 
 public class MokaApplication extends Application {
 	public static HashMap<String, MokaType> MOKA_TYPES;
+
+	private MicroRuntimeServiceBinder mMicroRuntimeServiceBinder;
+	private Properties mAgentContainerProperties;
 
 	@Override
 	public void onCreate() {
@@ -26,5 +39,68 @@ public class MokaApplication extends Application {
 				put(ComputerType.UmlType.KEY_TYPE, new ComputerType.UmlType("Diagramme UML", "Description d'un diagramme UML"));
 			}
 		};
+
+		mAgentContainerProperties = new Properties();
+		mAgentContainerProperties.setProperty(Profile.JVM, Profile.ANDROID);
+	}
+
+	public void startJadePlatform(String host) {
+		startJadePlatform(host, Profile.DEFAULT_PORT);
+	}
+
+	public void startJadePlatform(String host, int port) {
+		mAgentContainerProperties.setProperty(Profile.MAIN_HOST, host);
+		mAgentContainerProperties.setProperty(Profile.MAIN_PORT, String.valueOf(port));
+		bindMicroRuntimeService();
+	}
+
+	private void bindMicroRuntimeService() {
+		ServiceConnection serviceConnection = new ServiceConnection() {
+			public void onServiceConnected(ComponentName className, IBinder service) {
+				// Bind successful
+				mMicroRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
+				startAgentContainer();
+			};
+			public void onServiceDisconnected(ComponentName className) {
+				// Bind unsuccessful
+				mMicroRuntimeServiceBinder = null;
+			}
+		};
+
+		bindService(new Intent(getApplicationContext(), MicroRuntimeService.class),
+				serviceConnection,
+				Context.BIND_AUTO_CREATE);
+	}
+
+
+
+	private void startAgentContainer() {
+		mMicroRuntimeServiceBinder.startAgentContainer(mAgentContainerProperties,
+				new RuntimeCallback<Void>() {
+					@Override
+					public void onSuccess(Void thisIsNull) {
+						// Split container successfully started
+						// Start an agent here !
+					}
+					@Override
+					public void onFailure(Throwable throwable) {
+						// Split container startup error
+					}
+				} );
+	}
+
+	private void startAgent(String nickName, String className, Object[] params) {
+		mMicroRuntimeServiceBinder.startAgent(nickName, className, params,
+				new RuntimeCallback<Void>() {
+					@Override
+					public void onSuccess(Void aVoid) {
+						//Agent successfully started
+					}
+
+					@Override
+					public void onFailure(Throwable throwable) {
+						//Agent startup error
+					}
+				} );
 	}
 }
