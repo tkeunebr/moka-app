@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 import fr.utc.nf28.moka.agent.AndroidAgent;
+import fr.utc.nf28.moka.agent.IAndroidAgent;
 import fr.utc.nf28.moka.data.ComputerType;
 import fr.utc.nf28.moka.data.MediaType;
 import fr.utc.nf28.moka.data.MokaType;
@@ -14,13 +16,16 @@ import fr.utc.nf28.moka.data.TextType;
 import jade.android.MicroRuntimeService;
 import jade.android.MicroRuntimeServiceBinder;
 import jade.android.RuntimeCallback;
+import jade.core.MicroRuntime;
 import jade.core.Profile;
 import jade.util.leap.Properties;
+import jade.wrapper.ControllerException;
 
 import java.util.HashMap;
 
 public class MokaApplication extends Application {
 	public static HashMap<String, MokaType> MOKA_TYPES;
+	private static final String ANDROID_AGENT_NICKNAME = "AndroidAgent";
 
 	private MicroRuntimeServiceBinder mMicroRuntimeServiceBinder;
 	private Properties mAgentContainerProperties;
@@ -55,6 +60,15 @@ public class MokaApplication extends Application {
 		bindMicroRuntimeService();
 	}
 
+	public IAndroidAgent getAndroidAgentInterface() {
+		try {
+			return MicroRuntime.getAgent(ANDROID_AGENT_NICKNAME).getO2AInterface(IAndroidAgent.class);
+		} catch (ControllerException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	private void bindMicroRuntimeService() {
 		ServiceConnection serviceConnection = new ServiceConnection() {
 			public void onServiceConnected(ComponentName className, IBinder service) {
@@ -81,7 +95,7 @@ public class MokaApplication extends Application {
 					@Override
 					public void onSuccess(Void thisIsNull) {
 						// Split container successfully started
-						startAgent("dummyAgent", AndroidAgent.class.getName(), null);
+						startAgent(ANDROID_AGENT_NICKNAME, AndroidAgent.class.getName(), null);
 					}
 					@Override
 					public void onFailure(Throwable throwable) {
@@ -96,6 +110,7 @@ public class MokaApplication extends Application {
 					@Override
 					public void onSuccess(Void aVoid) {
 						//Agent successfully started
+						getAndroidAgentInterface().ping();
 					}
 
 					@Override
