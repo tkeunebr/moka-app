@@ -1,32 +1,36 @@
 package fr.utc.nf28.moka.ui;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
 import fr.utc.nf28.moka.R;
-import fr.utc.nf28.moka.data.MediaItem;
+import fr.utc.nf28.moka.data.ComputerItem;
 import fr.utc.nf28.moka.data.MokaItem;
 import fr.utc.nf28.moka.data.MokaType;
+import fr.utc.nf28.moka.io.agent.IAndroidAgent;
+import fr.utc.nf28.moka.ui.custom.MoveItemListener;
+import fr.utc.nf28.moka.util.JadeUtils;
 
 import static fr.utc.nf28.moka.util.LogUtils.makeLogTag;
 
 public class NewItemFragment extends SherlockFragment {
 	private static final String TAG = makeLogTag(NewItemFragment.class);
-	private static final Callbacks sDummyCallbacks = new Callbacks() {
-		@Override
-		public void onValidate(MokaItem newItem) {
-		}
-	};
 	private final MokaType mSelectedType;
-	private Callbacks mCallbacks = sDummyCallbacks;
+	private final IAndroidAgent mAgent = JadeUtils.getAndroidAgentInterface();
+	private MokaItem mNewItem;
 
 	public NewItemFragment(MokaType selectedType) {
 		mSelectedType = selectedType;
@@ -37,18 +41,6 @@ public class NewItemFragment extends SherlockFragment {
 	}
 
 	// Fragment lifecycle management
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		// Activities containing this fragment must implement its callbacks.
-		if (!(activity instanceof Callbacks)) {
-			throw new IllegalStateException(
-					"Activity must implement fragment's callbacks.");
-		}
-
-		mCallbacks = (Callbacks) activity;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,11 +58,20 @@ public class NewItemFragment extends SherlockFragment {
 		final TextView typeDescription = (TextView) rootView.findViewById(R.id.type_description);
 		final TextView typeCategory = (TextView) rootView.findViewById(R.id.type_category);
 		final ImageView typeImage = (ImageView) rootView.findViewById(R.id.type_image);
+		final SurfaceView canvasMoveItem = (SurfaceView) rootView.findViewById(R.id.canvas_move_item);
 
 		typeName.setText(mSelectedType.getName());
-		typeDescription.setText(mSelectedType.getDescription());
+		typeDescription.setText(mSelectedType.getDescription()); // TODO: remove description
 		typeCategory.setText(mSelectedType.getCategoryName());
 		typeImage.setImageResource(mSelectedType.getResId());
+		canvasMoveItem.setOnTouchListener(new MoveItemListener() {
+			@Override
+			public void move(int direction, int velocity) {
+				mAgent.moveItem(mNewItem.getId(), direction, velocity);
+			}
+		});
+
+		mNewItem = new ComputerItem.UmlItem("Diagramme UML"); // TODO: create accordingly to selected type
 
 		return rootView;
 	}
@@ -81,25 +82,37 @@ public class NewItemFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onDetach() {
-		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = sDummyCallbacks;
-
-		super.onDetach();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_validate:
-				mCallbacks.onValidate(new MediaItem.ImageItem("test")); // TODO: create accordingly to the type
+			case R.id.menu_delete:
+				final Resources resources = getResources();
+				final StringBuilder sb = new StringBuilder();
+				sb.append(resources.getString(R.string.delete_confirmation_message));
+				sb.append(" ");
+				sb.append(mNewItem.getTitle());
+				sb.append(" ?");
+				// TODO: use string variables
+				new AlertDialog.Builder(getSherlockActivity())
+						.setTitle(resources.getString(R.string.delete_confirmation_title))
+						.setMessage(sb.toString())
+						.setPositiveButton(resources.getString(R.string.delete_confirmation_ok), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int which) {
+								// TODO: call the DeleteAgent
+								getSherlockActivity().finish();
+							}
+						})
+						.setNegativeButton(resources.getString(R.string.delete_confirmation_cancel), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int which) {
+							}
+						})
+						.show();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	public interface Callbacks {
-		public void onValidate(MokaItem newItem);
-	}
+
 }

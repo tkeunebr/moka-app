@@ -1,97 +1,103 @@
 package fr.utc.nf28.moka.util;
 
-import android.util.Log;
-import jade.android.MicroRuntimeService;
-import jade.android.RuntimeCallback;
-
 import java.util.UUID;
 
-/**
- * all utils for managing jade runtime and agents life cycle
- */
+import fr.utc.nf28.moka.io.agent.IAndroidAgent;
+import jade.core.MicroRuntime;
+import jade.wrapper.ControllerException;
+
 public class JadeUtils {
-
 	/**
-	 * Log TAG
+	 * Agent name for AndroidAgent. Unique name based on UUID
 	 */
-	private static final String TAG = LogUtils.makeLogTag(JadeUtils.class);
-
+	public static final String ANDROID_AGENT_NICKNAME = "AndroidAgent_" + UUID.randomUUID().toString();
 	/**
-	 * Default port
+	 * default type for Jade skill registering
 	 */
-	public static final int DEFAULT_PORT = 1099;
-
+	public static final String JADE_SKILL_TYPE_DEFAULT = "MokaDefaultSkillType";
 	/**
-	 * runtime use for jade
+	 * name for Jade skill registering of AndroidAgent
 	 */
-	private static MicroRuntimeService mRuntime = null;
-
+	public static final String JADE_SKILL_NAME_ANDROID = "AndroidAgentSkillName";
 	/**
-	 * create jade container and connect to the main container
-	 *
-	 * @param ip   ip address of computer which host the main container
-	 * @param port port for network communication, could use DEFAULT_PORT
+	 * name for Jade skill registering of ConnectionAgent
 	 */
-	public static void createContainer(String ip, int port) {
-		if (mRuntime == null) {
-			mRuntime = new MicroRuntimeService();
+	public static final String JADE_SKILL_NAME_CONNECTION = "ConnectionAgentSkillName";
+	/**
+	 * name for Jade item movement skill
+	 */
+	public static final String JADE_SKILL_NAME_ITEM_MOVEMENT = "ItemMovementSkillName";
+	/**
+	 * name for Jade skill registering of CreationAgent
+	 */
+	public static final String JADE_SKILL_NAME_CREATION = "CreationAgentSkillName";
+	private static final IAndroidAgent sDummyAndroidAgentInterface = new IAndroidAgent() {
+		@Override
+		public void connectPlatform(String firstName, String lastName, String ip) {
 		}
-		mRuntime.startAgentContainer(ip, port,
-				new RuntimeCallback<Void>() {
-					@Override
-					public void onFailure(Throwable arg0) {
-						// Connection error
-					}
 
-					@Override
-					public void onSuccess(Void arg0) {
-						// Connection success
-						Log.i(TAG, "container created ! ");
-						//start the unique agent of android device
-						startAgent(UUID.randomUUID().toString(), "AndroidAgent.class", null);
-					}
-				}
-		);
-	}
+		@Override
+		public void createItem(String type) {
+		}
+
+		@Override
+		public void deleteItem(int itemId) {
+		}
+
+		@Override
+		public void moveItem(int itemId, int direction, int velocity) {
+		}
+
+		@Override
+		public void lockItem() {
+		}
+
+		@Override
+		public void editItem() {
+		}
+	};
 
 	/**
-	 * start a new agent,container has to be started
+	 * use to call method of AndroidAgent from Activity
 	 *
-	 * @param name       name to identify agent which has to be unique
-	 * @param agentClass class of your agent
-	 * @param params     Array of object which will be retrieved by your agent
-	 * @return true onSuccess, false onError see log for error type
+	 * @return interface reference of AndroidAgent running on device
 	 */
-	private static void startAgent(final String name, final String agentClass, final Object[] params) {
-		mRuntime.startAgent(name, agentClass, params,
-				new RuntimeCallback<Void>() {
-					@Override
-					public void onFailure(Throwable arg0) {
-					}
-
-					@Override
-					public void onSuccess(Void arg0) {
-						Log.i(TAG, "agent " + name + " : " + agentClass + " started ! ");
-					}
-				}
-		);
+	public static IAndroidAgent getAndroidAgentInterface() {
+		try {
+			return MicroRuntime.getAgent(ANDROID_AGENT_NICKNAME).getO2AInterface(IAndroidAgent.class);
+		} catch (ControllerException e) {
+			e.printStackTrace();
+			return sDummyAndroidAgentInterface;
+		}
 	}
 
 	/**
-	 * end the whole jade session
-	 * Stop agent container
+	 * connection transaction
 	 */
-	public static void close() {
-		if (mRuntime != null)
-			mRuntime.stopAgentContainer(new RuntimeCallback<Void>() {
-				@Override
-				public void onFailure(Throwable arg0) {
-				}
+	public static final String TRANSACTION_TYPE_CONNECTION = "connection";
 
-				@Override
-				public void onSuccess(Void arg0) {
-					mRuntime = null;
-				}
-			});
-	}
+	/**
+	 * addItem transaction
+	 */
+	public static final String TRANSACTION_TYPE_ADD_ITEM = "addItem";
+
+	/**
+	 * deleteItem transaction
+	 */
+	public static final String TRANSACTION_TYPE_DELETE_ITEM = "deleteItem";
+
+	/**
+	 * moveItem transaction
+	 */
+	public static final String TRANSACTION_TYPE_MOVE_ITEM = "moveItem";
+
+	/**
+	 * creation success transaction
+	 */
+	public static final String TRANSACTION_TYPE_ITEM_CREATION_SUCCESS = "creationSuccess";
+
+	/**
+	 * refresh current items transaction
+	 */
+	public static final String TRANSACTION_TYPE_REFRESH_CURRENT_ITEMS = "refreshCurrentItems";
 }

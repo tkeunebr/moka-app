@@ -2,33 +2,23 @@ package fr.utc.nf28.moka.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public abstract class MokaItem implements Parcelable {
+	public static final int INVALID_ID = -1;
 	private static final String DEFAULT_CREATOR_NAME = MokaItem.class.getSimpleName();
-	private static int sIdIndex = 0;
-	private int mId;
+	private int mId = INVALID_ID;
 	private String mTitle;
 	private MokaType mType;
 	private String mCreatorName;
 	private DateTime mCreationDate;
-	private List<HistoryEntry> mHistoryEntries = Collections.emptyList();
-
-	public MokaItem() {
-		mId = sIdIndex++;
-	}
 
 	public MokaItem(String title, MokaType type) {
 		this(title, type, DEFAULT_CREATOR_NAME, new DateTime());
 	}
 
 	public MokaItem(String title, MokaType type, String creatorName, DateTime creationDate) {
-		this();
-
 		mTitle = title;
 		mType = type;
 		mCreatorName = creatorName;
@@ -44,7 +34,6 @@ public abstract class MokaItem implements Parcelable {
 		if (millis != -1) {
 			mCreationDate = new DateTime(millis);
 		}
-		in.readTypedList(mHistoryEntries, HistoryEntry.CREATOR);
 	}
 
 	public int getId() {
@@ -87,13 +76,6 @@ public abstract class MokaItem implements Parcelable {
 		mCreationDate = date;
 	}
 
-	public void addHistoryEntry(HistoryEntry historyEntry) {
-		if (mHistoryEntries == null) {
-			mHistoryEntries = new ArrayList<HistoryEntry>();
-		}
-		mHistoryEntries.add(historyEntry);
-	}
-
 	@Override
 	public int describeContents() {
 		return 0;
@@ -110,6 +92,5 @@ public abstract class MokaItem implements Parcelable {
 		} else {
 			parcel.writeLong(-1);
 		}
-		parcel.writeTypedList(mHistoryEntries);
 	}
 }

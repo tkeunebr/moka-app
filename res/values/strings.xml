@@ -10,10 +10,10 @@
 
     <!-- MenuItems -->
     <string name="search">Rechercher</string>
-    <string name="refresh">Actualiser</string>
     <string name="delete">Supprimer</string>
     <string name="validate">Valider</string>
     <string name="licenses">Licences open source</string>
+    <string name="settings">Paramètres</string>
 
     <string name="search_hint">Rechercher un élément</string>
 
@@ -31,6 +31,80 @@
     <string name="main_class_spinner_title">Choisir une catégorie</string>
     <string name="type_image_content_description">Description du type</string>
 
+    <!-- Type titles -->
+    <string name="image_type_title">Image</string>
+    <string name="video_type_title">Vidéo</string>
+    <string name="web_page_type_title">Page web</string>
+    <string name="plain_text_type_title">Texte</string>
+    <string name="list_type_title">Liste</string>
+    <string name="post_it_type_title">Post-it</string>
+    <string name="uml_type_title">Diagramme UML</string>
+    <!-- Type descriptions -->
+    <string name="image_type_description"><![CDATA[Une <b>image</b> est une représentation visuelle d\'un objet.<br><br>
+        Après avoir rajouté une image, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son titre,</li>
+            <li>Modifier l\'image source,</li>
+            <li>La déplacer, l\'agrandir et la faire tourner.</li>
+        </ul>]]>
+    </string>
+    <string name="video_type_description"><![CDATA[Une <b>vidéo</b> permet d\'afficher tout type de contenu vidéo, par
+        exemple un lien YouTube.<br><br>
+        Après avoir rajouté une vidéo, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son titre,</li>
+            <li>Modifier le lien source,</li>
+            <li>La déplacer, l\'agrandir et la faire tourner,</li>
+            <li>La forcer à être jouée automatiquement.</li>
+        </ul>]]>
+    </string>
+    <string name="web_page_type_description"><![CDATA[Une <b>page web</b> permet d\'afficher n\'importe quel élément web
+        à la manière d\'un navigateur.<br><br>
+        Après avoir rajouté une page web, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son titre,</li>
+            <li>Choisir si elle est affichée automatiquement ou sous forme de lien,</li>
+            <li>Modifier le lien source,</li>
+            <li>La déplacer, l\'agrandir et la faire tourner.</li>
+        </ul>]]>
+    </string>
+    <string name="plain_text_type_description"><![CDATA[Un élément <b>texte</b> permet d\'afficher du texte, généralement
+        de longueur assez faible, par exemple un mémo ou encore un titre.<br><br>
+        Après avoir rajouté un élément texte, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son contenu,</li>
+            <li>Le déplacer, l\'agrandir et le faire tourner.</li>
+        </ul>]]>
+    </string>
+    <string name="list_type_description"><![CDATA[Une <b>liste</b> permet d\'afficher une suite d\'éléments placés
+        les uns à la suite des autres de manière ordonnée.<br><br>
+        Après avoir rajouté une liste, vous pourrez :<br><br>
+        <ul>
+            <li>Ajouter, modifier ou supprimer un élément,</li>
+            <li>La déplacer, l\'agrandir et la faire tourner.</li>
+        </ul>]]>
+    </string>
+    <string name="post_it_type_description"><![CDATA[Un <b>post-it</b> permet d\'afficher de manière visuelle un mémo.
+        Un post-it est consitué d\'un titre et de texte destiné à épingler une information ou une question.<br><br>
+        Après avoir rajouté un post-it, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son titre,</li>
+            <li>Modifier son contenu,</li>
+            <li>Changer sa couleur,</li>
+            <li>Le déplacer, l\'agrandir et le faire tourner.</li>
+        </ul>]]>
+    </string>
+    <string name="uml_type_description"><![CDATA[Un élément de type <b>UML</b> permet de construire et d\'afficher un
+        diagramme UML.<br><br>
+        Après avoir rajouté un élément de type UML, vous pourrez :<br><br>
+        <ul>
+            <li>Modifier son titre,</li>
+            <li>Modifier son contenu,</li>
+            <li>Ajouter des liens,</li>
+            <li>Le déplacer, l\'agrandir et le faire tourner.</li>
+        </ul>]]>
+    </string>
+
     <!-- Spinner content -->
     <string-array name="item_classes">
         <item>Texte</item>
@@ -41,7 +115,7 @@
 
     <!-- Start Activity -->
     <string name="info_nfc_text">Touchez un tag NFC Moka</string>
-    <string name="info_no_nfc_text">NFC non disponible. Veuilez vérifier vos paramètres.</string>
+    <string name="info_no_nfc_text">NFC non disponible. Veuillez vérifier vos paramètres.</string>
     <string name="start_button_manual">Configuration manuelle</string>
     <string name="start_button_skip">Skip</string>
     <string name="logo_description">Logo de l\'application</string>
@@ -49,4 +123,62 @@
     <!-- NewItemActivity -->
     <string name="new_item_actionbar_title">Nouvel élément</string>
 
+    <!-- Configuration Preferences -->
+    <string name="category_wireless">Wifi</string>
+    <string name="category_jade">Jade</string>
+    <string name="category_user">User</string>
+    <string name="preference_ip_title">Adresse IP</string>
+    <string name="preference_ip_summary">IP de la machine exécutant le mainContainer JADE</string>
+    <string name="preference_ip_dialog_title">Adresse IP</string>
+    <string name="preference_ip_default">192.168.1.50</string>
+    <string name="preference_port_title">Port</string>
+    <string name="preference_port_summary">Port sur lequel tourne le mainContainer JADE</string>
+    <string name="preference_port_dialog_title">Port de JADE</string>
+    <string name="preference_port_default">1099</string>
+    <string name="preference_ssid_title">SSID</string>
+    <string name="preference_ssid_summary">Identifiant du réseau WiFi</string>
+    <string name="preference_ssid_dialog_title">SSID</string>
+    <string name="preference_pwd_title">Password</string>
+    <string name="preference_pwd_summary">Mot de passe du réseau WiFi</string>
+    <string name="preference_pwd_dialog_title">Password WiFi</string>
+    <string name="preference_first_name_title">Prénom</string>
+    <string name="preference_first_name_summary">Prénom de l\'utilisateur</string>
+    <string name="preference_first_dialog_title">Entrez votre prénom</string>
+    <string name="preference_last_name_title">Nom</string>
+    <string name="preference_last_name_summary">Nom de l\'utilisateur</string>
+    <string name="preference_last_dialog_title">Entrez votre nom</string>
+
+    <!-- Manual Configuration Activity -->
+    <string name="button_write">Écrire TAG</string>
+    <string name="touch_a_tag">Touch a tag</string>
+
+    <!-- Device Configuration Activity -->
+    <string name="connexion">Connexion au réseau</string>
+    <string name="optenir">Récupération d\' une adresse IP</string>
+    <string name="container">Connexion au mainContainer JADE</string>
+    <string name="agent">Lancement de l\'agent android JADE</string>
+    <string name="name">Nom</string>
+    <string name="first_name">Prénom</string>
+    <string name="unknown_lastname">Inconnu</string>
+    <string name="unknown_firstname">Inconnu</string>
+
+    <!-- Croutons toast -->
+    <string name="no_ssid">SSID non renseigné, vérifier les paramètres.</string>
+    <string name="no_pwd">Password wifi non renseigné, vérifier les paramètres.</string>
+    <string name="change_success_first_name">Prénom enregistré.</string>
+    <string name="change_success_last_name">Nom enregistré.</string>
+    <string name="change_success_ssid">SSID enregistré.</string>
+    <string name="change_success_pwd">Password wifi enregistré.</string>
+    <string name="change_success_ip">JADE IP enregistrée.</string>
+    <string name="change_error_ip">Addresse ip non valide.</string>
+    <string name="change_success_port">JADE port enregistré.</string>
+    <string name="network_error">Erreur réseau</string>
+
+    <!-- Welcome Activity -->
+    <string name="welcome">Bienvenue sur Moka</string>
+    <string name="welcome_instruction">Entrez votre nom et votre prénom.</string>
+    <string name="welcome_tuto">Lancer un tutoriel</string>
+    <string name="welcome_moka">Accéder à Moka</string>
+
 </resources>
+
